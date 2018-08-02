@@ -1,6 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+Dotenv.load
+
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
@@ -12,7 +14,39 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "base"
+  config.vm.box = "dummy"
+  config.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
+
+  config.vm.provider :aws do |aws, override|
+    aws.access_key_id = ENV["AWS_ACCESS_KEY_ID"]
+    aws.secret_access_key = ENV["AWS_SECRET_ACCESS_KEY"]
+    aws.keypair_name = ENV["KEYPAIR_NAME"]
+
+    aws.region = "ap-northeast-1"
+    aws.availability_zone = "ap-northeast-1a"
+    aws.subnet_id = "subnet-2b5d4e62"
+    aws.security_groups = [
+      "sg-95ed08ee", # ssh group
+    ]
+    aws.associate_public_ip = true
+    aws.ssh_host_attribute = :public_ip_address
+
+    # Amazon Linux AMI 2018.03.0 (HVM), SSD Volume Type
+    aws.ami = "ami-9c9443e3"
+
+    aws.instance_type = "t2.micro"
+
+    aws.tags = {
+      "Name" => "#{`whoami`.strip}-vagrant",
+    }
+    aws.user_data = <<~BASH
+      #!/bin/sh
+      sed -i 's/^.*requiretty/#Defaults requiretty/' /etc/sudoers
+    BASH
+
+    override.ssh.username = "ec2-user"
+    override.ssh.private_key_path = ENV["PRIVATE_KEY_PATH"]
+  end
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -44,6 +78,7 @@ Vagrant.configure("2") do |config|
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
+  config.vm.synced_folder ".", "/vagrant", disabled: false, type: 'rsync'
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
