@@ -5,10 +5,10 @@ MITAMAE_VERSION = "v1.6.2"
 def generate_skeleton(target, name)
   raise "name is required" unless name
 
-  %W(
+  %W[
     #{target}s/#{name}/files
     #{target}s/#{name}/templates
-  ).each do |dir|
+  ].each do |dir|
     mkdir_p dir
     touch "#{dir}/.keep"
   end
