@@ -20,7 +20,7 @@ jobs:
             - "60:ed:d9:e6:c0:49:4e:f3:3b:67:c6:4e:20:71:38:92"
       - run:
           command: vagrant up --provider=aws
-          no_output_timeout: 3m
+          no_output_timeout: 10m
       - run:
           command: vagrant destroy -f
           when: always
