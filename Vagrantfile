@@ -102,4 +102,11 @@ Vagrant.configure("2") do |config|
   #   apt-get update
   #   apt-get install -y apache2
   # SHELL
+
+  itamae_args = ENV["DRY_RUN"] ? "--dry-run" : ""
+
+  config.vm.provision :shell, inline: <<~BASH
+    cd /vagrant
+    ./bin/mitamae-x86_64-linux local bootstrap.rb #{itamae_args}
+  BASH
 end
