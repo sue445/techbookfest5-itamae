@@ -109,7 +109,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision :shell, inline: <<~BASH
     cd /vagrant
-    ./bin/mitamae-x86_64-linux local bootstrap.rb #{itamae_args}
+    ./bin/mitamae-x86_64-linux local bootstrap.rb --node-yaml=node.yml #{itamae_args}
   BASH
 
   config.vm.provision :serverspec do |spec|

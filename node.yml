@@ -1,0 +1,12 @@
+rbenv:
+  global:
+    2.5.1
+  versions:
+    - 2.5.1
+
+  rbenv_root: "/usr/local/rbenv"
+
+rbenv-default-gems:
+  default-gems:
+    - bundler
+  install: true
