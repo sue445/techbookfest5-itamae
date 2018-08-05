@@ -30,6 +30,9 @@ end
 
 desc "Download mitamae bin file"
 task :download_bin do
+  # rubocop:disable Metrics/LineLength
   sh "wget https://github.com/itamae-kitchen/mitamae/releases/download/#{MITAMAE_VERSION}/mitamae-x86_64-linux --quiet -O bin/mitamae-x86_64-linux"
+  # rubocop:enable Metrics/LineLength
+
   chmod "+x", "bin/mitamae-x86_64-linux"
 end
