@@ -39,7 +39,7 @@ Vagrant.configure("2") do |config|
     aws.instance_type = "t2.micro"
 
     aws.tags = {
-      "Name" => "#{`whoami`.strip}-vagrant",
+      "Name" => "#{`whoami`.strip}-vagrant"
     }
     aws.user_data = <<~BASH
       #!/bin/sh
