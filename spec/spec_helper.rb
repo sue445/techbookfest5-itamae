@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Disable sudo
 # set :disable_sudo, true
 

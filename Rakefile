@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 MITAMAE_VERSION = "v1.6.2"
 
 def generate_skeleton(target, name)
