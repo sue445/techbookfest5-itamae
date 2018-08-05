@@ -2,6 +2,14 @@ require: rubocop-itamae
 
 AllCops:
   TargetRubyVersion: 2.5
+  Exclude:
+    # Ignore mitamae plugins
+    - 'plugins/**/*'
+
+    # via. https://github.com/rubocop-hq/rubocop/blob/v0.58.2/config/default.yml#L66-L69
+    - 'node_modules/**/*'
+    - 'vendor/**/*'
+    - '.git/**/*'
 
 Metrics/BlockLength:
   Exclude:
@@ -11,6 +19,9 @@ Metrics/LineLength:
   Max: 120
 
 Style/StringLiterals:
+  Enabled: false
+
+Style/StringLiteralsInInterpolation:
   Enabled: false
 
 Style/SymbolArray:
