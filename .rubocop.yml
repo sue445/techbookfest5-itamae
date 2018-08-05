@@ -1,0 +1,17 @@
+require: rubocop-itamae
+
+AllCops:
+  TargetRubyVersion: 2.5
+
+Metrics/BlockLength:
+  Exclude:
+    - Vagrantfile
+
+Metrics/LineLength:
+  Max: 120
+
+Style/StringLiterals:
+  Enabled: false
+
+Style/SymbolArray:
+  Enabled: false

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
@@ -37,7 +39,7 @@ Vagrant.configure("2") do |config|
     aws.instance_type = "t2.micro"
 
     aws.tags = {
-      "Name" => "#{`whoami`.strip}-vagrant",
+      "Name" => "#{`whoami`.strip}-vagrant"
     }
     aws.user_data = <<~BASH
       #!/bin/sh
@@ -113,9 +115,5 @@ Vagrant.configure("2") do |config|
   config.vm.provision :serverspec do |spec|
     # pattern for specfiles to search
     spec.pattern = "spec/**/*_spec.rb"
-    # disable error if no specfile was found ( usefull with dynamic specfile retrieving through another provisionner like Ansible Galaxy => specfiles can be saved into ansible role repository for example ). Default: true
-    # spec.error_no_spec_files = false
-    # save result into html an report, saved into a 'rspec_html_reports' directory. Default: false
-    # spec.html_output = true
   end
 end

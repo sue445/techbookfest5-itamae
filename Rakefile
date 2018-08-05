@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 MITAMAE_VERSION = "v1.6.2"
 
 def generate_skeleton(target, name)
   raise "name is required" unless name
 
-  %W(
+  %W[
     #{target}s/#{name}/files
     #{target}s/#{name}/templates
-  ).each do |dir|
+  ].each do |dir|
     mkdir_p dir
     touch "#{dir}/.keep"
   end
@@ -28,6 +30,9 @@ end
 
 desc "Download mitamae bin file"
 task :download_bin do
+  # rubocop:disable Metrics/LineLength
   sh "wget https://github.com/itamae-kitchen/mitamae/releases/download/#{MITAMAE_VERSION}/mitamae-x86_64-linux --quiet -O bin/mitamae-x86_64-linux"
+  # rubocop:enable Metrics/LineLength
+
   chmod "+x", "bin/mitamae-x86_64-linux"
 end

@@ -25,9 +25,29 @@ jobs:
           command: vagrant destroy -f
           when: always
 
+  rubocop:
+    docker:
+      - image: circleci/ruby
+
+    working_directory: ~/app
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-bundle-{{ checksum "Gemfile.lock" }}
+            - v1-bundle
+      - run: ./.circleci/setup_bundle.sh
+      - save_cache:
+          key: v1-bundle-{{ checksum "Gemfile.lock" }}
+          paths:
+            - ~/app/vendor/bundle
+      - run: bundle exec rubocop
+
 workflows:
   version: 2
 
   build:
     jobs:
       - build
+      - rubocop
