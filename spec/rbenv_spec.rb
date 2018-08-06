@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "spec_helper"
-
 rbenv_root = node["rbenv"]["rbenv_root"]
 
 describe file(rbenv_root) do
