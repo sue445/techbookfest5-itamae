@@ -1,0 +1,79 @@
+{
+  "variables": {
+    "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
+    "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
+    "ssh_keypair_name": "{{env `KEYPAIR_NAME`}}",
+    "ssh_private_key_file": "{{env `PRIVATE_KEY_PATH`}}",
+    "ami_name": "techbookfest5-itamae-{{timestamp}}"
+  },
+  "_comments": {
+    "security_group_ids": "ssh group",
+    "source_ami": "Amazon Linux AMI 2018.03.0 (HVM), SSD Volume Type"
+  },
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "access_key": "{{user `aws_access_key`}}",
+      "secret_key": "{{user `aws_secret_key`}}",
+      "ssh_keypair_name": "{{user `ssh_keypair_name`}}",
+
+      "region": "ap-northeast-1",
+      "availability_zone": "ap-northeast-1a",
+      "subnet_id": "subnet-2b5d4e62",
+
+      "security_group_ids": [
+        "sg-95ed08ee"
+      ],
+
+      "associate_public_ip_address": true,
+      "ssh_interface": "public_ip",
+
+      "source_ami": "ami-9c9443e3",
+
+      "instance_type": "t2.micro",
+      "user_data": "#!/bin/sh\nsed -i 's/^.*requiretty/#Defaults requiretty/' /etc/sudoers",
+
+      "ssh_username": "ec2-user",
+      "ssh_private_key_file": "{{user `ssh_private_key_file`}}",
+
+      "ssh_keep_alive_interval": "30s",
+      "ssh_read_write_timeout": "5m",
+      "ssh_timeout": "5m",
+
+      "launch_block_device_mappings": [
+        {
+          "device_name": "/dev/xvda",
+          "volume_size": 8,
+          "volume_type": "gp2",
+          "delete_on_termination": true
+        }
+      ],
+
+      "ami_name": "{{user `ami_name`}}"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell-local",
+      "inline": [
+        "rm -f tmp/techbookfest5.zip",
+        "git-archive-all --prefix=techbookfest5/ tmp/techbookfest5.zip"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "tmp/techbookfest5.zip",
+      "destination": "/tmp/techbookfest5.zip",
+      "generated": true
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "cd /tmp",
+        "unzip -q techbookfest5.zip",
+        "cd techbookfest5",
+        "sudo ./bin/mitamae-x86_64-linux local bootstrap.rb --node-yaml=node.yml"
+      ]
+    }
+  ]
+}
