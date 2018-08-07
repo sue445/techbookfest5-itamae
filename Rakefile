@@ -2,6 +2,9 @@
 
 MITAMAE_VERSION = "v1.6.2"
 
+require 'bundler/setup'
+require 'rspec/core/rake_task'
+
 def generate_skeleton(target, name)
   raise "name is required" unless name
 
@@ -35,4 +38,13 @@ task :download_bin do
   # rubocop:enable Metrics/LineLength
 
   chmod "+x", "bin/mitamae-x86_64-linux"
+end
+
+namespace :packer do
+  desc 'Run serverspec tests on packer'
+  RSpec::Core::RakeTask.new(:serverspec) do |t|
+    t.pattern = "#{__dir__}/spec/**/*_spec.rb"
+    t.rspec_opts = "--color --format documentation --require #{__dir__}/packer/spec_helper"
+    t.verbose = true
+  end
 end

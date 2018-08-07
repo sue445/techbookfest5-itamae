@@ -74,6 +74,12 @@
         "cd techbookfest5",
         "sudo ./bin/mitamae-x86_64-linux local bootstrap.rb --node-yaml=node.yml"
       ]
+    },
+    {
+      "type": "serverspec",
+      "rake_file": "Rakefile",
+      "rake_task": "packer:serverspec",
+      "rake_env_vars": "$BUNDLE_GEMFILE=Gemfile"
     }
   ]
 }
