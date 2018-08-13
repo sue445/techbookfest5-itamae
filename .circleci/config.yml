@@ -5,7 +5,7 @@
 version: 2
 
 jobs:
-  build:
+  itamae:
     docker:
       - image: sue445/vagrant-aws
     working_directory: ~/app
@@ -51,5 +51,5 @@ workflows:
 
   build:
     jobs:
-      - build
+      - itamae
       - rubocop
