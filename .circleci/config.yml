@@ -46,6 +46,40 @@ jobs:
             - ~/app/vendor/bundle
       - run: bundle exec rubocop
 
+  packer:
+    docker:
+      - image: circleci/ruby
+
+    working_directory: ~/app
+    environment:
+      USER: circleci
+      PRIVATE_KEY_PATH: /home/circleci/.ssh/id_rsa_60edd9e6c0494ef33b67c64e20713892
+      PACKER_VERSION: 1.2.5
+      PACKER_PROVISIONER_SERVERSPEC_VERSION: 1.0.0
+
+    steps:
+      - checkout
+      - run:
+          name: Setup
+          command: |
+            git submodule sync
+            git submodule update --init
+            mkdir -p 700 ~/.ssh/
+      - add_ssh_keys:
+          fingerprints:
+            - "60:ed:d9:e6:c0:49:4e:f3:3b:67:c6:4e:20:71:38:92"
+      - run: ./.circleci/setup_packer.sh
+      - restore_cache:
+          keys:
+            - v1-bundle-{{ checksum "Gemfile.lock" }}
+            - v1-bundle
+      - run: ./.circleci/setup_bundle.sh
+      - save_cache:
+          key: v1-bundle-{{ checksum "Gemfile.lock" }}
+          paths:
+            - ~/app/vendor/bundle
+      - run: bundle exec packer build packer/aws.json
+
 workflows:
   version: 2
 
@@ -53,3 +87,14 @@ workflows:
     jobs:
       - itamae
       - rubocop
+      - hold_packer:
+          type: approval
+          requires:
+            - itamae
+            - rubocop
+          filters:
+            branches:
+              only: master
+      - packer:
+          requires:
+            - hold_packer
