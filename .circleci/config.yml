@@ -71,7 +71,14 @@ jobs:
           key: v1-bundle-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}
           paths:
             - ~/app/vendor/bundle
-      - run: bundle exec packer build packer/aws.json
+      - run:
+          name: packer build
+          command: |
+            AMI_NAME="techbookfest5-$(date +'%Y%m%d-%H%M%S')"
+            echo "AMI_NAME=${AMI_NAME}"
+            bundle exec packer build -var "ami_name=${AMI_NAME}" packer/aws.json
+            git tag -a $AMI_NAME -m $AMI_NAME
+            git push origin --tags
 
 workflows:
   version: 2
