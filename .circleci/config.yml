@@ -14,9 +14,7 @@ jobs:
 
     steps:
       - checkout
-      - run: git submodule sync
-      - run: git submodule update --init
-      - run: mkdir -p 700 /root/.ssh/
+      - run: ./.circleci/setup_repo.sh
       - add_ssh_keys:
           fingerprints:
             - "60:ed:d9:e6:c0:49:4e:f3:3b:67:c6:4e:20:71:38:92"
@@ -37,11 +35,11 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-bundle-{{ checksum "Gemfile.lock" }}
-            - v1-bundle
+            - v1-bundle-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}
+            - v1-bundle-{{ .Environment.CIRCLE_JOB }}
       - run: ./.circleci/setup_bundle.sh
       - save_cache:
-          key: v1-bundle-{{ checksum "Gemfile.lock" }}
+          key: v1-bundle-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}
           paths:
             - ~/app/vendor/bundle
       - run: bundle exec rubocop
@@ -59,23 +57,18 @@ jobs:
 
     steps:
       - checkout
-      - run:
-          name: Setup
-          command: |
-            git submodule sync
-            git submodule update --init
-            mkdir -p 700 ~/.ssh/
+      - run: ./.circleci/setup_repo.sh
       - add_ssh_keys:
           fingerprints:
             - "60:ed:d9:e6:c0:49:4e:f3:3b:67:c6:4e:20:71:38:92"
       - run: ./.circleci/setup_packer.sh
       - restore_cache:
           keys:
-            - v1-bundle-{{ checksum "Gemfile.lock" }}
-            - v1-bundle
+            - v1-bundle-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}
+            - v1-bundle-{{ .Environment.CIRCLE_JOB }}
       - run: ./.circleci/setup_bundle.sh
       - save_cache:
-          key: v1-bundle-{{ checksum "Gemfile.lock" }}
+          key: v1-bundle-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}
           paths:
             - ~/app/vendor/bundle
       - run: bundle exec packer build packer/aws.json
