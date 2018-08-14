@@ -85,9 +85,9 @@ workflows:
           requires:
             - itamae
             - rubocop
-          filters:
-            branches:
-              only: master
+#          filters:
+#            branches:
+#              only: master
       - packer:
           requires:
             - hold_packer
