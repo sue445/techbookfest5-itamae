@@ -14,7 +14,12 @@ jobs:
 
     steps:
       - checkout
-      - run: ./.circleci/setup_repo.sh
+      - run:
+          name: Setup workspace
+          command: |
+            git submodule sync
+            git submodule update --init
+            mkdir -p 700 ~/.ssh/
       - add_ssh_keys:
           fingerprints:
             - "60:ed:d9:e6:c0:49:4e:f3:3b:67:c6:4e:20:71:38:92"
@@ -37,7 +42,11 @@ jobs:
           keys:
             - v1-bundle-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}
             - v1-bundle-{{ .Environment.CIRCLE_JOB }}
-      - run: ./.circleci/setup_bundle.sh
+      - run:
+          name: bundle install
+          command: |
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+            bundle clean
       - save_cache:
           key: v1-bundle-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}
           paths:
@@ -57,16 +66,48 @@ jobs:
 
     steps:
       - checkout
-      - run: ./.circleci/setup_repo.sh
+      - run:
+          name: Setup workspace
+          command: |
+            git submodule sync
+            git submodule update --init
+            mkdir -p 700 ~/.ssh/
+      - run:
+          name: git config
+          command: |
+            git config push.default current
+            git config user.name "CircleCI"
+            git config user.email ${EMAIL}
       - add_ssh_keys:
           fingerprints:
             - "60:ed:d9:e6:c0:49:4e:f3:3b:67:c6:4e:20:71:38:92"
-      - run: ./.circleci/setup_packer.sh
+      - run:
+          name: Install git-archive-all
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y python-pip
+            sudo pip install git-archive-all
+      - run:
+          name: Install packer
+          command: |
+            wget "https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip" -O /tmp/packer.zip
+            sudo unzip -o -d /usr/local/bin /tmp/packer.zip
+            sudo chmod +x /usr/local/bin/packer
+      - run:
+          name: Install packer-provisioner-serverspec
+          command: |
+            wget "https://github.com/sue445/packer-provisioner-serverspec/releases/download/v${PACKER_PROVISIONER_SERVERSPEC_VERSION}/packer-provisioner-serverspec_linux_amd64" -O /tmp/packer-provisioner-serverspec
+            sudo mv /tmp/packer-provisioner-serverspec /usr/local/bin
+            sudo chmod +x /usr/local/bin/packer-provisioner-serverspec
       - restore_cache:
           keys:
             - v1-bundle-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}
             - v1-bundle-{{ .Environment.CIRCLE_JOB }}
-      - run: ./.circleci/setup_bundle.sh
+      - run:
+          name: bundle install
+          command: |
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+            bundle clean
       - save_cache:
           key: v1-bundle-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}
           paths:
