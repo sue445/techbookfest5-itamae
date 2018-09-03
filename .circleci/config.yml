@@ -128,14 +128,16 @@ workflows:
     jobs:
       - itamae
       - rubocop
-      - hold_packer:
-          type: approval
-          requires:
-            - itamae
-            - rubocop
-          filters:
-            branches:
-              only: master
-      - packer:
-          requires:
-            - hold_packer
+      # TODO: debug
+      - packer
+#      - hold_packer:
+#          type: approval
+#          requires:
+#            - itamae
+#            - rubocop
+#          filters:
+#            branches:
+#              only: master
+#      - packer:
+#          requires:
+#            - hold_packer
