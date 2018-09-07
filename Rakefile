@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-MITAMAE_VERSION = "v1.6.2"
+MITAMAE_VERSION = "v1.6.3"
 
 require 'bundler/setup'
 require 'rspec/core/rake_task'
