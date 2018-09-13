@@ -14,7 +14,9 @@ describe file("#{rbenv_root}/version") do
 end
 
 describe file("#{rbenv_root}/default-gems") do
-  let(:default_gems) { node["rbenv-default-gems"]["default-gems"].join("\n") + "\n" }
+  let(:default_gems) do
+    node["rbenv-default-gems"]["default-gems"].join("\n") + "\n"
+  end
 
   it { should exist }
   it { should be_file }
