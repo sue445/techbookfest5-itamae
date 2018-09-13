@@ -40,15 +40,15 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-bundle-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}
-            - v1-bundle-{{ .Environment.CIRCLE_JOB }}
+            - v1-bundle-{{ checksum "Gemfile.lock" }}
+            - v1-bundle
       - run:
           name: bundle install
           command: |
             bundle install --jobs=4 --retry=3 --path vendor/bundle
             bundle clean
       - save_cache:
-          key: v1-bundle-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}
+          key: v1-bundle-{{ checksum "Gemfile.lock" }}
           paths:
             - ~/app/vendor/bundle
       - run: bundle exec rubocop
@@ -101,15 +101,15 @@ jobs:
             sudo chmod +x /usr/local/bin/packer-provisioner-serverspec
       - restore_cache:
           keys:
-            - v1-bundle-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}
-            - v1-bundle-{{ .Environment.CIRCLE_JOB }}
+            - v1-bundle-{{ checksum "Gemfile.lock" }}
+            - v1-bundle
       - run:
           name: bundle install
           command: |
             bundle install --jobs=4 --retry=3 --path vendor/bundle
             bundle clean
       - save_cache:
-          key: v1-bundle-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}
+          key: v1-bundle-{{ checksum "Gemfile.lock" }}
           paths:
             - ~/app/vendor/bundle
       - run:
