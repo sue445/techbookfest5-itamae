@@ -4,7 +4,9 @@
 [![CircleCI](https://circleci.com/gh/sue445/techbookfest5-itamae/tree/master.svg?style=svg&circle-token=d0ffc6acf36f0e3d68ec537d548c95e9194a50cb)](https://circleci.com/gh/sue445/techbookfest5-itamae/tree/master)
 
 ## 詳しい説明
-「Packer with mitamae」を読んでください。（後日通販予定）
+「Packer with mitamae」を読んでください。
+
+https://sue445.booth.pm/items/1033989
 
 ## 書籍の誤字脱字などについて
 [Issue](https://github.com/sue445/techbookfest5-itamae/issues) に起票してください。（日本語で構いません）
