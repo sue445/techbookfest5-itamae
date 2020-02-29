@@ -63,6 +63,3 @@ DEPENDENCIES
   rubocop
   rubocop-itamae
   serverspec
-
-BUNDLED WITH
-   1.16.1

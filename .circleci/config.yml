@@ -55,7 +55,7 @@ jobs:
 
   packer:
     docker:
-      - image: circleci/ruby
+      - image: circleci/ruby:2.6
 
     working_directory: ~/app
     environment:
